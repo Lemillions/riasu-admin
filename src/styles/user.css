@@ -3,5 +3,88 @@
   flex-flow: column;
   color: black;
   width: 100%;
+  gap: 10px;
+}
+
+#userContainer header{
+  display:flex; 
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 20px;
+  height: 80px;
+  box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
   padding: 20px;
+}
+
+#inputsContainer {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#usuariosContainer {
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+  padding: 10px;
+}
+
+#listaUsuarios {
+  width: 100%;  
+}
+
+#headerLista {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  background-color: #fafafa;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.171);
+}
+
+#headerLista span {
+  text-align: center;
+  white-space: nowrap
+}
+
+.usuarioInfo {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 10px 0;
+}
+
+.usuarioInfo span {
+  text-align: center;
+  white-space: nowrap
+} 
+
+.usuarioNome {
+  width: 25%;
+  border-right:1px solid rgba(0, 0, 0, 0.171);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.usuarioUser {
+  width: 20%;
+  border-right:1px solid rgba(0, 0, 0, 0.171);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.usuarioEmail {
+  width: 30%;
+  border-right:1px solid rgba(0, 0, 0, 0.171);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.usuarioStatus {
+  width: 100px;
+  border-right:1px solid rgba(0, 0, 0, 0.171);
+}
+.usuarioData {
+  width: calc(25% - 100px);
 }

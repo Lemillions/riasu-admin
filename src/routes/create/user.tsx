@@ -2,8 +2,7 @@ import "../styles/user.css";
 import { Input, Tooltip } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { api } from "../api";
-import { Link } from "react-router-dom";
+import { api } from "../../api";
 
 interface Usuario {
   id: string;
@@ -48,11 +47,9 @@ export default function User() {
               size="large"
             />
           </div>
-          <Link to="/user/create">
           <button>
             <MdOutlineAdd size={16} color="#fff" /> Criar Usuário
           </button>
-          </Link>
         </div>
         <div id="listaUsuarios">
           <div id="headerLista">

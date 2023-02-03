@@ -1,4 +1,6 @@
-import { Form } from 'react-router-dom';
+import "../styles/film.css"
+import axios from "axios"
+import { useState, useEffect } from "react"
 
 interface Film {
     name: string,
@@ -8,18 +10,22 @@ interface Film {
     genres: string[],
     products?: string[]
 }
-export default function film(){
-  const film: Film = {
-    name: 'Filme Teste',
-    description: "Filme de teste",
-    src: "www.com.br",
-    banner: "www.com.br",
-    genres: [],
-  }
+export default function Film(){
+  const [filmes, setFilmes] = useState<Film[]>([])
 
+  useEffect(()=>{
+    axios.get('http://localhost:3333/api/film')
+    .then((res)=> setFilmes(res.data))
+  },[])
+  
   return(
-    <div>
-      
+    <div id='filmContainer'>
+      <h1>Filmes</h1>
+      <div id="listaFilmes">
+        {filmes.map((filme)=> {
+          return <>{filme.name}</>
+        })}
+      </div>
     </div>
   )
 }

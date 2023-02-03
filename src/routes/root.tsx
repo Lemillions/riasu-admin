@@ -1,36 +1,42 @@
+import { Link, Outlet } from "react-router-dom";
+import Logo from "../assets/logo.svg";
+import "../route.css";
+import { BsFilm, BsDisplay } from "react-icons/bs";
+import { AiOutlineUser, AiOutlineHome } from "react-icons/ai";
+import { FaTheaterMasks } from "react-icons/fa";
+import { FiPackage } from "react-icons/fi"
+
 export default function Root() {
   return (
-    <>
-      <div id="sidebar">
-        <h1>React Router Contacts</h1>
-        <div>
-          <form id="search-form" role="search">
-            <input
-              id="q"
-              aria-label="Search contacts"
-              placeholder="Search"
-              type="search"
-              name="q"
-            />
-            <div id="search-spinner" aria-hidden hidden={true} />
-            <div className="sr-only" aria-live="polite"></div>
-          </form>
-          <form method="post">
-            <button type="submit">New</button>
-          </form>
-        </div>
-        <nav>
-          <ul>
-            <li>
-              <a href={`/contacts/1`}>Your Name</a>
-            </li>
-            <li>
-              <a href={`/contacts/2`}>Your Friend</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div id="detail"></div>
-    </>
+    <div id="container">
+      <nav id="sideMenu">
+        <img src={Logo} id="logo" />
+        <Link to={"../"} className="menuOption">
+          <AiOutlineHome size={16} />
+          &nbsp;&nbsp;&nbsp;Dashboard
+        </Link>
+        <Link to={"user"} className="menuOption">
+          <AiOutlineUser size={16} />
+          &nbsp;&nbsp;&nbsp;Usuários
+        </Link>
+        <Link to={"product"} className="menuOption">
+          <FiPackage size={16} />
+          &nbsp;&nbsp;&nbsp;Planos
+        </Link>
+        <Link to={"channel"} className="menuOption">
+          <BsDisplay size={16} />
+          &nbsp;&nbsp;&nbsp;Canais
+        </Link>
+        <Link to={"film"} className="menuOption">
+          <BsFilm size={16} />
+          &nbsp;&nbsp;&nbsp;Filmes
+        </Link>
+        <Link to={"genre"} className="menuOption">
+          <FaTheaterMasks size={16} />
+          &nbsp;&nbsp;&nbsp;Géneros
+        </Link>
+      </nav>
+      <Outlet />
+    </div>
   );
 }

@@ -8,6 +8,11 @@ import {
 import Root from "./routes/root";
 import ErrorPage from "./error-page";
 import Film from "./routes/film";
+import User from "./routes/user";
+import Product from "./routes/product";
+import Genre from "./routes/genre";
+import Channel from "./routes/channel";
+
 
 const router = createBrowserRouter([
   {
@@ -16,12 +21,24 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children:[
       {
-        path: "user",
-        element: <Film/>
+        path: "film",
+        element: <Film />,
       },
       {
-        path: "film",
-        element: <Film/>
+        path: "product",
+        element: <Product />
+      },
+      {
+        path: "channel",
+        element: <Channel />
+      },
+      {
+        path: "genre",
+        element: <Genre />
+      },
+      {
+        path: "user",
+        element: <User />
       }
     ]
   },

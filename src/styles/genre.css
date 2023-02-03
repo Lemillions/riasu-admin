@@ -1,0 +1,7 @@
+#genreContainer{
+  display: flex;
+  flex-flow: column;
+  color: black;
+  width: 100%;
+  padding: 20px;
+}

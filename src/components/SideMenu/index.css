@@ -6,6 +6,8 @@
   height: 100vh;
   background-color: #00012e;
   text-align: center;
+  position: sticky;
+  top: 0;
 }
 
 #logo {

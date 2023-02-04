@@ -10,12 +10,16 @@
   display:flex; 
   flex-flow: row nowrap;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   height: 80px;
   box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
   -webkit-box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
   padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #ffffff;
 }
 
 #inputsContainer {
@@ -87,4 +91,15 @@
 }
 .usuarioData {
   width: calc(25% - 100px);
+}
+
+#formContainer {
+  display: flex;
+  flex-flow: column;
+  padding: 20px;
+  gap: 10px;
+}
+
+#formContainer label, #formContainer input {
+  margin-right: 15px;
 }

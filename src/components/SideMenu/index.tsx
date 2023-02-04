@@ -8,13 +8,9 @@ import { FiPackage } from "react-icons/fi";
 import { useState, useEffect } from "react";
 
 export default function SideMenu() {
-  const isActive = (rota: string) => {
-    return location.pathname == rota;
-  };
 
   const [rotaAtiva, setRotaATiva] = useState<string>(location.pathname);
 
-  console.log(location.pathname);
   return (
     <nav id="sideMenu">
       <img src={Logo} id="logo" />
@@ -35,7 +31,7 @@ export default function SideMenu() {
         onClick={() => {
           setRotaATiva("/user");
         }}
-        style={rotaAtiva == "/user" ? { backgroundColor: "#4996FF" } : {}}
+        style={rotaAtiva.includes("/user") ? { backgroundColor: "#4996FF" } : {}}
       >
         <AiOutlineUser size={16} />
         &nbsp;&nbsp;&nbsp;Usuários
@@ -46,7 +42,7 @@ export default function SideMenu() {
         onClick={() => {
           setRotaATiva("/product");
         }}
-        style={rotaAtiva == "/product" ? { backgroundColor: "#4996FF" } : {}}
+        style={rotaAtiva.includes("/product") ? { backgroundColor: "#4996FF" } : {}}
       >
         <FiPackage size={16} />
         &nbsp;&nbsp;&nbsp;Planos
@@ -57,7 +53,7 @@ export default function SideMenu() {
         onClick={() => {
           setRotaATiva("/channel");
         }}
-        style={rotaAtiva == "/channel" ? { backgroundColor: "#4996FF" } : {}}
+        style={rotaAtiva.includes("/channel") ? { backgroundColor: "#4996FF" } : {}}
       >
         <BsDisplay size={16} />
         &nbsp;&nbsp;&nbsp;Canais
@@ -68,7 +64,7 @@ export default function SideMenu() {
         onClick={() => {
           setRotaATiva("/film");
         }}
-        style={rotaAtiva == "/film" ? { backgroundColor: "#4996FF" } : {}}
+        style={rotaAtiva.includes("/film") ? { backgroundColor: "#4996FF" } : {}}
       >
         <BsFilm size={16} />
         &nbsp;&nbsp;&nbsp;Filmes
@@ -79,7 +75,7 @@ export default function SideMenu() {
         onClick={() => {
           setRotaATiva("/genre");
         }}
-        style={rotaAtiva == "/genre" ? { backgroundColor: "#4996FF" } : {}}
+        style={rotaAtiva.includes("/genre") ? { backgroundColor: "#4996FF" } : {}}
       >
         <FaTheaterMasks size={16} />
         &nbsp;&nbsp;&nbsp;Géneros

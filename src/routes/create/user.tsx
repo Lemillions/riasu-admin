@@ -1,106 +1,154 @@
-import "../styles/user.css";
-import { Input, Tooltip } from "antd";
-import { MdOutlineAdd } from "react-icons/md";
+import "../../styles/user.css";
 import { useEffect, useState } from "react";
 import { api } from "../../api";
+import { Input, message, Select } from "antd";
+import { BiArrowBack } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 interface Usuario {
-  id: string;
   name: string;
   username: string;
   email: string;
   password: string;
   status: string;
-  createdAt: string;
+  products: string[];
 }
 
-export default function User() {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [buscaInput, setBuscaInput] = useState<string>("");
-  const usuariosFiltrados = buscaInput.length
-    ? usuarios.filter(
-        (e) =>
-          e.name.includes(buscaInput) ||
-          e.email.includes(buscaInput) ||
-          e.username.includes(buscaInput)
-      )
-    : usuarios;
+export default function UserCreate() {
+  const navigate = useNavigate();
+  const [listaProdutos, setListaProdutos] = useState<any[]>([]);
+  const [form, setForm] = useState<Usuario>({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    status: "ACTIVE",
+    products: [],
+  });
 
   useEffect(() => {
     api
-      .get("user")
-      .then((res) => setUsuarios(res.data))
-      .catch((err) => console.log(err));
+      .get("product")
+      .then((res) => setListaProdutos(res.data))
+      .catch((err) =>
+        message.error(
+          "Ocorreu um erro e não vai ser possivel selecionar os planos"
+        )
+      );
   }, []);
+  const criarUsuario = () => {
+    const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (
+      form.name.length &&
+      form.username.length &&
+      regexEmail.test(form.email) &&
+      form.password.length
+    ) {
+      api
+        .post("user", {
+          name: form.name,
+          username: form.username,
+          email: form.email,
+          password: form.password,
+          status: form.status,
+        })
+        .then((res) =>{
+          message.success("Usuario criado com sucesso")
+          api
+            .post(`user/${res.data.id}/product`, form.products)
+            .catch(err =>{message.error("Ocorreu um erro ao adicionar planos")})
+          }
+        )
+        .catch((err) => message.error("Ocorreu um erro!"));
+
+      setForm({
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+        status: "ACTIVE",
+        products: [],
+      });
+    } else {
+      message.error("Preencha todos os campos corretamente!");
+    }
+  };
+
   return (
     <div id="userContainer">
       <header>
+        <BiArrowBack
+          size={26}
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        />
         <h1>Usuários</h1>
       </header>
-      <div id="usuariosContainer">
-        <div id="inputsContainer">
-          <div style={{ width: "500px" }}>
-            <Input.Search
-              placeholder="Pesquisar usuarios"
-              onChange={(e) => setBuscaInput(e.currentTarget.value)}
-              enterButton
-              size="large"
-            />
-          </div>
-          <button>
-            <MdOutlineAdd size={16} color="#fff" /> Criar Usuário
-          </button>
+      <div id="formContainer">
+        <label>* Nome :</label>
+        <Input
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.currentTarget.value })}
+        />
+        <label>* Username :</label>
+        <Input
+          value={form.username}
+          onChange={(e) =>
+            setForm({ ...form, username: e.currentTarget.value })
+          }
+        />
+        <label>* Email :</label>
+        <Input
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.currentTarget.value })}
+        />
+        <div>
+          <label>* Senha :</label>
+          <Input
+            value={form.password}
+            style={{ width: "400px" }}
+            onChange={(e) =>
+              setForm({ ...form, password: e.currentTarget.value })
+            }
+          />
+          <label>* Status :</label>
+          <Select
+            defaultValue="ACTIVE"
+            onChange={(e) => setForm({ ...form, status: e })}
+            style={{
+              width: 120,
+              marginLeft: "5px",
+            }}
+            options={[
+              {
+                value: "ACTIVE",
+                label: "ACTIVE",
+              },
+              {
+                value: "INACTIVE",
+                label: "INACTIVE",
+              },
+            ]}
+          />
         </div>
-        <div id="listaUsuarios">
-          <div id="headerLista">
-            <span className="usuarioNome">Nome</span>
-            <span className="usuarioUser">Username</span>
-            <span className="usuarioEmail">Email</span>
-            <span className="usuarioStatus">Status</span>
-            <span className="usuarioData">Data de criação</span>
-          </div>
-          {usuariosFiltrados.map((usuario: Usuario) => {
-            return (
-              <div className="usuarioInfo">
-                <Tooltip title={usuario.name}>
-                  <span className="usuarioNome">{usuario.name}</span>
-                </Tooltip>
-                <Tooltip title={usuario.username}>
-                  <span className="usuarioUser">{usuario.username}</span>
-                </Tooltip>
-                <Tooltip title={usuario.email}>
-                  <span className="usuarioEmail">{usuario.email}</span>
-                </Tooltip>
-                <span className="usuarioStatus">
-                  <span
-                    style={
-                      usuario.status == "ACTIVE"
-                        ? {
-                            border: "1px solid #84ff4f",
-                            backgroundColor: "#84ff4f49",
-                            color: "green",
-                            padding: "4px",
-                            borderRadius: "4px",
-                          }
-                        : {
-                            border: "1px solid #fa343481",
-                            backgroundColor: "#fa34342f",
-                            color: "red",
-                            padding: "4px",
-                            borderRadius: "4px",
-                          }
-                    }
-                  >
-                    {usuario.status}
-                  </span>
-                </span>
-                <span className="usuarioData">
-                  {new Date(usuario.createdAt).toLocaleDateString("pt-BR")}
-                </span>
-              </div>
-            );
+        <label>Planos :</label>
+        <Select
+          mode="multiple"
+          placeholder="Selecione os planos"
+          defaultValue={form.products}
+          onChange={(e) => setForm({ ...form, products: e })}
+          options={listaProdutos.map((produto) => {
+            return { label: produto.name, value: produto.id };
           })}
-        </div>
+        />
+        <button
+          style={{ width: "140px", marginTop: "20px" }}
+          onClick={() => {
+            criarUsuario();
+          }}
+        >
+          Criar usuário
+        </button>
       </div>
     </div>
   );

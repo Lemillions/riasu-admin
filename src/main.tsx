@@ -12,6 +12,7 @@ import User from "./routes/user";
 import Product from "./routes/product";
 import Genre from "./routes/genre";
 import Channel from "./routes/channel";
+import UserCreate from "./routes/create/user";
 
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "user",
         element: <User />
+      },
+      {
+        path: "user/create",
+        element: <UserCreate />
       }
     ]
   },

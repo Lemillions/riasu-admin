@@ -6,7 +6,7 @@ interface Film {
     name: string,
     description?: string,
     src: string,
-    banner?: string,
+    banner: string,
     genres: string[],
     products?: string[]
 }

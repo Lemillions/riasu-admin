@@ -13,7 +13,7 @@ interface Usuario {
   password: string;
   status: string;
   createdAt: string;
-  products: string[];
+  products: any[];
 }
 
 export default function User() {
@@ -31,7 +31,6 @@ export default function User() {
     createdAt: "",
     products: [],
   });
-
   useEffect(() => {
     api
       .get("user")
@@ -51,14 +50,14 @@ export default function User() {
   const usuariosFiltrados = buscaInput.length
     ? usuarios.filter(
         (e) =>
-          e.name.includes(buscaInput) ||
-          e.email.includes(buscaInput) ||
-          e.username.includes(buscaInput)
+          e.name.toUpperCase().includes(buscaInput) ||
+          e.email.toUpperCase().includes(buscaInput) ||
+          e.username.toUpperCase().includes(buscaInput)
       )
     : usuarios;
 
   const showModal = (user: Usuario) => {
-    setForm(user);
+    setForm({...user, products: user.products.map(produto => {return produto.productId})});
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -93,7 +92,6 @@ export default function User() {
             <Input.Search
               placeholder="Pesquisar usuarios"
               onChange={(e) => setBuscaInput(e.currentTarget.value)}
-              enterButton
               size="large"
             />
           </div>
@@ -175,7 +173,7 @@ export default function User() {
               mode="multiple"
               placeholder="Selecione os planos"
               style={{ width: "100%" }}
-              defaultValue={form.products.map((e:any) => e.id)}
+              value={form.products.map((e:any) => e)}
               onChange={(e) => setForm({ ...form, products: e })}
               options={listaProdutos.map((produto) => {
                 return { label: produto.name, value: produto.id };

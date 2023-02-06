@@ -135,7 +135,7 @@ export default function UserCreate() {
         <Select
           mode="multiple"
           placeholder="Selecione os planos"
-          defaultValue={form.products}
+          value={form.products}
           onChange={(e) => setForm({ ...form, products: e })}
           options={listaProdutos.map((produto) => {
             return { label: produto.name, value: produto.id };

@@ -1,4 +1,4 @@
-import "../styles/film.css"
+import "../../styles/film.css"
 import axios from "axios"
 import { useState, useEffect } from "react"
 
@@ -10,7 +10,7 @@ interface Film {
     genres: string[],
     products?: string[]
 }
-export default function Film(){
+export default function FilmCreate(){
   const [filmes, setFilmes] = useState<Film[]>([])
 
   useEffect(()=>{

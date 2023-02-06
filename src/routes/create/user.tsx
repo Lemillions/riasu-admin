@@ -15,7 +15,6 @@ interface Usuario {
 }
 
 export default function UserCreate() {
-  const navigate = useNavigate();
   const [listaProdutos, setListaProdutos] = useState<any[]>([]);
   const [form, setForm] = useState<Usuario>({
     name: "",
@@ -25,7 +24,7 @@ export default function UserCreate() {
     status: "ACTIVE",
     products: [],
   });
-
+  const navigate = useNavigate();
   useEffect(() => {
     api
       .get("product")
@@ -52,14 +51,15 @@ export default function UserCreate() {
           password: form.password,
           status: form.status,
         })
-        .then((res) =>{
-          message.success("Usuario criado com sucesso")
+        .then((res) => {
+          message.success("Usuario criado com sucesso");
           api
             .post(`user/${res.data.id}/product`, form.products)
-            .catch(err =>{message.error("Ocorreu um erro ao adicionar planos")})
-          }
-        )
-        .catch((err) => message.error("Ocorreu um erro!"));
+            .catch((err) => {
+              message.error("Ocorreu um erro ao adicionar planos");
+            });
+        })
+        .catch((err) => message.error("Ocorreu um erro ao criar usuario!"));
 
       setForm({
         name: "",

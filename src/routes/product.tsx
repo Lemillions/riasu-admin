@@ -9,6 +9,7 @@ interface Produto {
   id: string;
   name: string;
   channels: any[];
+  users?: string[];
   createdAt: string;
 }
 export default function Product() {
@@ -51,6 +52,15 @@ export default function Product() {
   };
 
   const handleOk = () => {
+    api.put(`product/${form.id}`, { name: form.name }).then((res) => {
+      message.success("Plano atualizaodo com sucesso!");
+      setProdutos([...produtos.filter((e) => e.id != form.id), form]);
+      api
+        .post(`product/${res.data.id}/channel`, form.channels)
+        .catch((err) =>
+          message.error("Ocorreu um erro ao adicionar canais!")
+        );
+    });
     setIsModalOpen(false);
   };
 
@@ -60,7 +70,7 @@ export default function Product() {
   return (
     <div id="productContainer">
       <header>
-        <h1>Produtos</h1>
+        <h1>Planos</h1>
       </header>
       <div id="produtosContainer">
         <div id="inputsContainer">
@@ -71,7 +81,7 @@ export default function Product() {
               size="large"
             />
           </div>
-          <button onClick={() => navigate("/user/create")}>
+          <button onClick={() => navigate("/product/create")}>
             <MdOutlineAdd size={16} color="#fff" />
             Criar Produto
           </button>
@@ -112,8 +122,8 @@ export default function Product() {
             />
           </Modal>
           {produtosFiltrados
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((produto: any) => {
+            .sort((a, b) => (b.users?.length || 0) - (a.users?.length || 0))
+            .map((produto: Produto) => {
               return (
                 <div className="produtoInfo">
                   <span
@@ -123,7 +133,7 @@ export default function Product() {
                   >
                     {produto.name}
                   </span>
-                  <span className="produtoUsuarios">{produto.users.length}</span>
+                  <span className="produtoUsuarios">{produto.users?.length || 0}</span>
                   <span className="produtoCanais">
                     {produto.channels.length}
                   </span>

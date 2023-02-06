@@ -13,6 +13,10 @@ import Product from "./routes/product";
 import Genre from "./routes/genre";
 import Channel from "./routes/channel";
 import UserCreate from "./routes/create/user";
+import ProductCreate from "./routes/create/product";
+import FilmCreate from "./routes/create/film";
+import GenreCreate from "./routes/create/genre";
+import ChannelCreate from "./routes/create/channel";
 
 
 const router = createBrowserRouter([
@@ -42,9 +46,26 @@ const router = createBrowserRouter([
         element: <User />
       },
       {
+        path: "film/create",
+        element: <FilmCreate />
+      },
+      {
         path: "user/create",
         element: <UserCreate />
+      },
+      {
+        path: "product/create",
+        element: <ProductCreate />
+      },
+      {
+        path: "genre/create",
+        element: <GenreCreate />
+      },
+      {
+        path: "channel/create",
+        element: <ChannelCreate />
       }
+      
     ]
   },
 ]);

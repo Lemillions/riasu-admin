@@ -52,28 +52,37 @@ export default function Genre() {
   }, []);
   const navigate = useNavigate();
   const generosFiltrados = buscaInput.length
-    ? generos.filter((e) =>
+    ? generos.filter((e) =>   
         e.name.toUpperCase().includes(buscaInput.toUpperCase())
       )
     : generos;
 
   const showModal = (genre: Genero) => {
+    console.log("Genre:", genre)
     setForm({
       ...genre,
       channels: genre.channels.map((channel) => {
-        return channel.channelId;
+        return channel;
       }),
       films: genre.films.map((film) => {
-        return film.filmId;
+        return film;
       }),
     });
+    console.log("Form:", form)
     setIsModalOpen(true);
   };
+
 
   const handleOk = () => {
     api.put(`genre/${form.id}`, { name: form.name }).then((res) => {
       message.success("Plano atualizaodo com sucesso!");
-      setGeneros([...generos.filter((e) => e.id != form.id), form]);
+      setGeneros([...generos.filter((e) => e.id != form.id), {
+        id: form.id,
+        name: form.name,
+        channels: form.channels,
+        films: form.films,
+        createdAt: form.createdAt,
+      }]);
       api
         .post(`genre/${res.data.id}/channel`, form.channels)
         .catch((err) => message.error("Ocorreu um erro ao adicionar canais!"));

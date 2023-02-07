@@ -3,5 +3,93 @@
   flex-flow: column;
   color: black;
   width: 100%;
+  gap: 10px;
+}
+#channelContainer header{
+  display:flex; 
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 15px;
+  height: 80px;
+  box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px -3px 6px -1px rgba(0,0,0,0.75);
   padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #ffffff;
+}
+
+#inputsContainer {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#canaisContainer {
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+  padding: 10px;
+}
+
+#listacanais {
+  width: 100%;  
+}
+
+#headerLista {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  background-color: #fafafa;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.171);
+}
+
+#headerLista span {
+  text-align: center;
+  white-space: nowrap
+}
+
+.canalInfo {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 10px 0;
+}
+
+.canalInfo span {
+  text-align: center;
+  white-space: nowrap
+} 
+
+.canalNome {
+  width: calc(45% - 80px);
+  border-right:1px solid rgba(0, 0, 0, 0.171);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.canalDescricao {
+  width: calc(55% - 80px);
+  border-right:1px solid rgba(0, 0, 0, 0.171);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.canalData {
+  width: 160px;
+}
+
+#formContainer {
+  display: flex;
+  flex-flow: column;
+  padding: 20px;
+  gap: 10px;
+}
+
+#formContainer label, #formContainer input {
+  margin-right: 15px;
 }

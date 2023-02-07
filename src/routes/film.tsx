@@ -85,7 +85,7 @@ export default function Film() {
   return (
     <div id="filmContainer">
       <header>
-        <h1>Planos</h1>
+        <h1>Filmes</h1>
       </header>
       <div id="produtosContainer">
         <div id="inputsContainer">

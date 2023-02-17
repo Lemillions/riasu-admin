@@ -1,6 +1,6 @@
 import "../styles/genre.css";
-import { Input, Modal, Tooltip, Select, message } from "antd";
-import { MdOutlineAdd } from "react-icons/md";
+import { Input, Modal, Button, Select, message, Popconfirm } from "antd";
+import { MdOutlineAdd, MdDeleteOutline } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { useNavigate } from "react-router-dom";
@@ -52,13 +52,12 @@ export default function Genre() {
   }, []);
   const navigate = useNavigate();
   const generosFiltrados = buscaInput.length
-    ? generos.filter((e) =>   
+    ? generos.filter((e) =>
         e.name.toUpperCase().includes(buscaInput.toUpperCase())
       )
     : generos;
 
   const showModal = (genre: Genero) => {
-    console.log("Genre:", genre)
     setForm({
       ...genre,
       channels: genre.channels.map((channel) => {
@@ -68,26 +67,33 @@ export default function Genre() {
         return film;
       }),
     });
-    console.log("Form:", form)
     setIsModalOpen(true);
   };
-
 
   const handleOk = () => {
     api.put(`genre/${form.id}`, { name: form.name }).then((res) => {
       message.success("Plano atualizaodo com sucesso!");
-      setGeneros([...generos.filter((e) => e.id != form.id), {
-        id: form.id,
-        name: form.name,
-        channels: form.channels,
-        films: form.films,
-        createdAt: form.createdAt,
-      }]);
+      setGeneros([
+        ...generos.filter((e) => e.id != form.id),
+        {
+          id: form.id,
+          name: form.name,
+          channels: form.channels,
+          films: form.films,
+          createdAt: form.createdAt,
+        },
+      ]);
       api
-        .post(`genre/${res.data.id}/channel`, form.channels)
+        .post(
+          `genre/${res.data.id}/channel`,
+          form.channels.map((e) => e.channelId || e)
+        )
         .catch((err) => message.error("Ocorreu um erro ao adicionar canais!"));
       api
-        .post(`genre/${res.data.id}/film`, form.films)
+        .post(
+          `genre/${res.data.id}/film`,
+          form.films.map((e) => e.filmId || e)
+        )
         .catch((err) => message.error("Ocorreu um erro ao adicionar filmes!"));
     });
     setIsModalOpen(false);
@@ -125,10 +131,38 @@ export default function Genre() {
           <Modal
             title="Atualizar genero"
             open={isModalOpen}
-            okText={"Salvar alterações"}
-            cancelText={"Cancelar"}
             onOk={handleOk}
             onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Cancelar
+              </Button>,
+              <Popconfirm
+                title="Deletar Genero"
+                description="Você tem certeza que deseja deletar esse genero ?"
+                onConfirm={() => {
+                  api
+                    .delete(`genre/${form.id}`)
+                    .then((res) => {
+                      message.success("Genero deletado com sucesso!");
+                      setGeneros(generos.filter((e) => e.id != form.id));
+                    })
+                    .catch((err) => {
+                      message.error("Ocorreu um erro ao deletar o genero!");
+                    });
+                  setIsModalOpen(false);
+                }}
+                okText="Sim"
+                cancelText="Não"
+              >
+                <Button key="delete" onClick={() => {}} type="primary" danger>
+                  Deletar Genero
+                </Button>
+              </Popconfirm>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                Salvar alterações
+              </Button>,
+            ]}
           >
             <label>Nome :</label>
             <Input
@@ -141,9 +175,9 @@ export default function Genre() {
             <label>Canais :</label>
             <Select
               mode="multiple"
-              placeholder="Selecione os planos"
+              placeholder="Selecione os canais"
               style={{ width: "100%" }}
-              value={form.channels.map((e: any) => e)}
+              value={form.channels.map((e: any) => e.channelId || e)}
               onChange={(e) => setForm({ ...form, channels: e })}
               options={listaCanais.map((canal) => {
                 return { label: canal.name, value: canal.id };
@@ -154,7 +188,7 @@ export default function Genre() {
               mode="multiple"
               placeholder="Selecione os filmes"
               style={{ width: "100%" }}
-              value={form.films.map((e: any) => e)}
+              value={form.films.map((e: any) => e.filmId || e)}
               onChange={(e) => setForm({ ...form, films: e })}
               options={listaFilmes.map((filme) => {
                 return { label: filme.name, value: filme.id };
@@ -165,7 +199,7 @@ export default function Genre() {
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((genero: Genero) => {
               return (
-                <div className="generoInfo">
+                <div className="generoInfo" key={genero.id}>
                   <span
                     className="generoNome"
                     onClick={() => showModal(genero)}
@@ -173,12 +207,8 @@ export default function Genre() {
                   >
                     {genero.name}
                   </span>
-                  <span className="generoCanais">
-                    {genero.channels.length}
-                  </span>
-                  <span className="generoCanais">
-                    {genero.films.length}
-                  </span>
+                  <span className="generoCanais">{genero.channels.length}</span>
+                  <span className="generoCanais">{genero.films.length}</span>
                   <span className="generoData">
                     {new Date(genero.createdAt).toLocaleDateString("pt-BR")}
                   </span>

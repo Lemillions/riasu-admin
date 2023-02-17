@@ -1,5 +1,5 @@
 import "../styles/product.css";
-import { Input, Modal, Tooltip, Select, message } from "antd";
+import { Input, Modal, Button, Popconfirm, Select, message } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { api } from "../api";
@@ -118,10 +118,38 @@ export default function Product() {
           <Modal
             title="Atualizar produto"
             open={isModalOpen}
-            okText={"Salvar alterações"}
-            cancelText={"Cancelar"}
             onOk={handleOk}
             onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Cancelar
+              </Button>,
+              <Popconfirm
+                title="Deletar Plano"
+                description="Você tem certeza que deseja deletar esse plano ?"
+                onConfirm={() => {
+                  api
+                    .delete(`product/${form.id}`)
+                    .then((res) => {
+                      message.success("Plano deletado com sucesso!");
+                      setProdutos(produtos.filter((e) => e.id != form.id));
+                    })
+                    .catch((err) =>
+                      message.error("Ocorreu um erro ao deletar o plano!")
+                    );
+                  setIsModalOpen(false);
+                }}
+                okText="Sim"
+                cancelText="Não"
+              >
+                <Button key="delete" onClick={() => {}} type="primary" danger>
+                  Deletar Plano
+                </Button>
+              </Popconfirm>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                Salvar alterações
+              </Button>,
+            ]}
           >
             <label>Nome :</label>
             <Input
@@ -158,7 +186,7 @@ export default function Product() {
             .sort((a, b) => (b.users?.length || 0) - (a.users?.length || 0))
             .map((produto: Produto) => {
               return (
-                <div className="produtoInfo">
+                <div className="produtoInfo" key={produto.id}>
                   <span
                     className="produtoNome"
                     onClick={() => showModal(produto)}
@@ -172,9 +200,7 @@ export default function Product() {
                   <span className="produtoCanais">
                     {produto.channels.length}
                   </span>
-                  <span className="produtoCanais">
-                    {produto.films.length}
-                  </span>
+                  <span className="produtoCanais">{produto.films.length}</span>
                   <span className="produtoData">
                     {new Date(produto.createdAt).toLocaleDateString("pt-BR")}
                   </span>

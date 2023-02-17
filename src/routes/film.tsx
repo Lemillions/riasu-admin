@@ -1,5 +1,5 @@
 import "../styles/film.css";
-import { Input, Modal, Tooltip, Select, message } from "antd";
+import { Input, Modal, Tooltip, Select, message, Button, Popconfirm } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { api } from "../api";
@@ -45,7 +45,7 @@ export default function Film() {
           "Ocorreu um erro e não vai ser possivel selecionar os generos!"
         )
       );
-  });
+  }, []);
   const navigate = useNavigate();
   const filmesFiltrados = buscaInput.length
     ? filmes.filter((e) =>
@@ -91,7 +91,7 @@ export default function Film() {
         <div id="inputsContainer">
           <div style={{ width: "500px" }}>
             <Input.Search
-              placeholder="Pesquisar Produtos"
+              placeholder="Pesquisar Filmes"
               onChange={(e) => setBuscaInput(e.currentTarget.value)}
               size="large"
             />
@@ -110,10 +110,35 @@ export default function Film() {
           <Modal
             title="Atualizar filme"
             open={isModalOpen}
-            okText={"Salvar alterações"}
-            cancelText={"Cancelar"}
             onOk={handleOk}
             onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Cancelar
+              </Button>,
+              <Popconfirm
+                title="Deletar Filme"
+                description="Você tem certeza que deseja deletar esse Filme ?"
+                onConfirm={() => {
+                  api.delete(`film/${form.id}`).then((res) => {
+                    message.success("Filme deletado com sucesso!");
+                    setIsModalOpen(false);
+                  }).catch((err) => {
+                    message.error("Ocorreu um erro ao deletar o filme!");
+                  });
+                  setIsModalOpen(false);
+                }}
+                okText="Sim"
+                cancelText="Não"
+              >
+                <Button key="delete" onClick={() => {}} type="primary" danger>
+                  Deletar Filme
+                </Button>
+              </Popconfirm>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                Salvar alterações
+              </Button>,
+            ]}
           >
             <label>Nome :</label>
             <Input
@@ -161,7 +186,7 @@ export default function Film() {
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((filme: Filme) => {
               return (
-                <div className="filmeInfo">
+                <div className="filmeInfo" key={filme.id}>
                   <span
                     className="filmeNome"
                     onClick={() => showModal(filme)}

@@ -1,5 +1,13 @@
 import "../styles/user.css";
-import { Input, Modal, Tooltip, Select, message } from "antd";
+import {
+  Input,
+  Modal,
+  Tooltip,
+  Select,
+  message,
+  Button,
+  Popconfirm,
+} from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { api } from "../api";
@@ -57,7 +65,12 @@ export default function User() {
     : usuarios;
 
   const showModal = (user: Usuario) => {
-    setForm({...user, products: user.products.map(produto => {return produto.productId})});
+    setForm({
+      ...user,
+      products: user.products.map((produto) => {
+        return produto.productId;
+      }),
+    });
     setIsModalOpen(true);
   };
   const handleOk = () => {
@@ -79,6 +92,7 @@ export default function User() {
     setIsModalOpen(false);
   };
   const handleCancel = () => {
+    console.log("Cancel");
     setIsModalOpen(false);
   };
   return (
@@ -110,10 +124,38 @@ export default function User() {
           <Modal
             title="Atualizar usuário"
             open={isModalOpen}
-            okText={"Salvar alterações"}
-            cancelText={"Cancelar"}
             onOk={handleOk}
             onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Cancelar
+              </Button>,
+              <Popconfirm
+                title="Deletar Usuário"
+                description="Você tem certeza que deseja deletar esse usuário ?"
+                onConfirm={() => {
+                  api
+                    .delete(`user/${form.id}`)
+                    .then((res) => {
+                      message.success("Usuario deletado com sucesso!");
+                      setUsuarios(usuarios.filter((e) => e.id != form.id));
+                    })
+                    .catch((err) => {
+                      message.error("Ocorreu um erro ao deletar o usuário");
+                    });
+                  setIsModalOpen(false);
+                }}
+                okText="Sim"
+                cancelText="Não"
+              >
+                <Button key="delete" onClick={() => {}} type="primary" danger>
+                  Deletar Usuário
+                </Button>
+              </Popconfirm>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                Salvar alterações
+              </Button>,
+            ]}
           >
             <label>Nome :</label>
             <Input
@@ -173,7 +215,7 @@ export default function User() {
               mode="multiple"
               placeholder="Selecione os planos"
               style={{ width: "100%" }}
-              value={form.products.map((e:any) => e)}
+              value={form.products.map((e: any) => e)}
               onChange={(e) => setForm({ ...form, products: e })}
               options={listaProdutos.map((produto) => {
                 return { label: produto.name, value: produto.id };
@@ -184,7 +226,7 @@ export default function User() {
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((usuario: Usuario) => {
               return (
-                <div className="usuarioInfo">
+                <div className="usuarioInfo" key={usuario.id}>
                   <Tooltip title={usuario.name}>
                     <span className="usuarioNome">{usuario.name}</span>
                   </Tooltip>

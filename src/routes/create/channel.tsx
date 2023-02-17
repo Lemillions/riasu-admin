@@ -35,7 +35,7 @@ export default function ChannelCreate() {
           "Ocorreu um erro e não vai ser possivel selecionar os generos!"
         )
       );
-  });
+  }, []);
 
   const criarCanal = () => {
     if(form.name.length && form.src.length && form.banner.length ){

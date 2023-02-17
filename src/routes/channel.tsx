@@ -1,5 +1,13 @@
 import "../styles/channel.css";
-import { Input, Modal, Tooltip, Select, message } from "antd"
+import {
+  Input,
+  Modal,
+  Tooltip,
+  Select,
+  message,
+  Button,
+  Popconfirm,
+} from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { api } from "../api";
@@ -91,7 +99,7 @@ export default function Channel() {
         <div id="inputsContainer">
           <div style={{ width: "500px" }}>
             <Input.Search
-              placeholder="Pesquisar Produtos"
+              placeholder="Pesquisar Canais"
               onChange={(e) => setBuscaInput(e.currentTarget.value)}
               size="large"
             />
@@ -110,10 +118,39 @@ export default function Channel() {
           <Modal
             title="Atualizar canal"
             open={isModalOpen}
-            okText={"Salvar alterações"}
-            cancelText={"Cancelar"}
             onOk={handleOk}
             onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Cancelar
+              </Button>,
+              <Popconfirm
+                title="Deletar Canal"
+                description="Você tem certeza que deseja deletar esse canal ?"
+                onConfirm={() => {
+                  api
+                    .delete(`channel/${form.id}`)
+                    .then((res) => {
+                      setCanais((canais) =>
+                        canais.filter((canal) => canal.id !== form.id)
+                      );
+                    })
+                    .catch((err) =>
+                      message.error("Ocorreu um erro ao deletar o canal!")
+                    );
+                  setIsModalOpen(false);
+                }}
+                okText="Sim"
+                cancelText="Não"
+              >
+                <Button key="delete" onClick={() => {}} type="primary" danger>
+                  Deletar Canal
+                </Button>
+              </Popconfirm>,
+              <Button key="submit" type="primary" onClick={handleOk}>
+                Salvar alterações
+              </Button>,
+            ]}
           >
             <label>Nome :</label>
             <Input
@@ -161,7 +198,7 @@ export default function Channel() {
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((canal: Canal) => {
               return (
-                <div className="canalInfo">
+                <div className="canalInfo" key={canal.id}>
                   <span
                     className="canalNome"
                     onClick={() => showModal(canal)}

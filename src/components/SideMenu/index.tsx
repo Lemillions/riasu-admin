@@ -5,7 +5,7 @@ import { BsFilm, BsDisplay } from "react-icons/bs";
 import { AiOutlineUser, AiOutlineHome } from "react-icons/ai";
 import { FaTheaterMasks } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function SideMenu() {
 
